@@ -4,31 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Controller extends BaseController
+class MicropostsController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function counts($user) {
-        $count_microposts = $user->microposts()->count();
 
-        return [
-            'count_microposts' => $count_microposts,
-        ];
-    }
-
-    public function index()
+   public function index()
     {
         $data = [];
         if (\Auth::check()) {
             $user = \Auth::user();
-            $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
-            
+            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10);
+
             $data = [
                 'user' => $user,
                 'microposts' => $microposts,
             ];
         }
-        
         return view('welcome', $data);
     }
     
